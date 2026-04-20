@@ -2,7 +2,9 @@ import { Controller, Get, UseGuards, Request, Patch, Body } from '@nestjs/common
 import { UserService } from './user.service';
 import { JwtGuard } from '../auth/guards/jwt.guard';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
