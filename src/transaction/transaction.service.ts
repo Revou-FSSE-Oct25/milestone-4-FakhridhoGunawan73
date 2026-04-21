@@ -76,23 +76,25 @@ export class TransactionService {
         if (!toAccount) {
             throw new NotFoundException('Destination account not found');
         }
-        await this.prisma.account.update({
-            where: { id: dto.fromAccountId },
-            data: { balance: fromAccount.balance - dto.amount },
-        });
-        await this.prisma.account.update({
-            where: { id: dto.toAccountId },
-            data: { balance: toAccount.balance + dto.amount },
-        });
-        const transaction = await this.prisma.transaction.create({
-            data: {
-                type: 'TRANSFER',
-                amount: dto.amount,
-                fromAccountId: dto.fromAccountId,
-                toAccountId: dto.toAccountId,
-            },
-        });
-        return {transaction};
+        const [, , transaction] = await this.prisma.$transaction([
+            this.prisma.account.update({
+                where : { id: dto.fromAccountId },
+                data: { balance: fromAccount.balance - dto.amount },
+            }),
+            this.prisma.account.update({
+                where: { id: dto.toAccountId },
+                data: { balance: toAccount.balance + dto.amount },
+            }),
+            this.prisma.transaction.create({
+                data: {
+                    type: 'TRANSFER',
+                    amount: dto.amount,
+                    fromAccountId: dto.fromAccountId,
+                    toAccountId: dto.toAccountId,
+                },
+            }),
+        ]);
+        return { transaction };
     }
     async findAllTransactions(userId : number) {
         return this.prisma.transaction.findMany({
