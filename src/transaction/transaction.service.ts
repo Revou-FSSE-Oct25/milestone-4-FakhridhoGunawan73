@@ -104,13 +104,25 @@ export class TransactionService {
             },
         });
     }
-    async findOneTransaction(id: number) {
+    async findOneTransaction(id: number, userId: number) {
         const transaction = await this.prisma.transaction.findUnique({
             where: { id },
+            include: {
+                fromAccount: true,
+                toAccount: true,
+            },
         });
         if (!transaction) {
             throw new NotFoundException('Transaction not found');
         }
+
+        const belongsToUser = 
+            transaction.fromAccount?.userId === userId ||
+            transaction.toAccount?.userId === userId;
+
+        if (!belongsToUser) {
+            throw new NotFoundException('Transaction not found');
+        }    
         return transaction;
     }
 }

@@ -37,7 +37,7 @@ export class TransactionController {
 
   @UseGuards(JwtGuard)
   @Get(':id')
-  findOneTransaction(@Param('id') id: string) {
-    return this.transactionService.findOneTransaction(+id);
+  findOneTransaction(@Request() req, @Param('id') id: string) {
+    return this.transactionService.findOneTransaction(+id, req.user.sub);
   }
 }
