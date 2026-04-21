@@ -2,9 +2,13 @@
 
 Banking API built with NestJS and Prisma
 
+---
+
 ## 🌐 Live Demo
 
 https://milestone-4-fakhridhogunawan73-production.up.railway.app/api
+
+---
 
 ## 📋 Features
 
@@ -12,8 +16,11 @@ https://milestone-4-fakhridhogunawan73-production.up.railway.app/api
 - User Profile Management
 - Bank Account CRUD
 - Transactions (Deposit, Withdraw, Transfer)
-- Role-based Access Control (Customer & Admin)
+- Ownership-based Access Control (users can only access their own data)
+- Atomic transfer operations using Prisma transactions
 - API Documentation with Swagger
+
+---
 
 ## 🛠️ Technologies
 
@@ -24,12 +31,17 @@ https://milestone-4-fakhridhogunawan73-production.up.railway.app/api
 - **Railway** - Backend deployment platform
 - **JWT Authentication** - Secure authentication
 - **Swagger** - API documentation
+- **Jest** - Unit testing (Coming Soon)
+
+---
 
 ## 🗄️ Database Schema
 
 - **User** - Stores user accounts with roles (CUSTOMER/ADMIN)
 - **Account** - Bank accounts (SAVINGS/CHECKING) linked to users
 - **Transaction** - Records of DEPOSIT, WITHDRAWAL, and TRANSFER
+
+---
 
 ## 🚀 How to Run Locally
 
@@ -73,6 +85,8 @@ npx prisma db push
 npm run start:dev
 ```
 
+---
+
 ## 📝 API Endpoints
 
 ### 🔐 Auth
@@ -91,25 +105,29 @@ npm run start:dev
 
 ### 🏦 Account
 
-| Method | Endpoint      | Description            |
-| ------ | ------------- | ---------------------- |
-| POST   | /accounts     | Create bank account    |
-| GET    | /accounts     | List all user accounts |
-| GET    | /accounts/:id | Get specific account   |
-| PATCH  | /accounts/:id | Update bank account    |
-| DELETE | /accounts/:id | Delete bank account    |
+| Method | Endpoint     | Description            |
+| ------ | ------------ | ---------------------- |
+| POST   | /account     | Create bank account    |
+| GET    | /account     | List all user accounts |
+| GET    | /account/:id | Get specific account   |
+| PATCH  | /account/:id | Update bank account    |
+| DELETE | /account/:id | Delete bank account    |
 
 ### 💸 Transaction
 
-| Method | Endpoint               | Description               |
-| ------ | ---------------------- | ------------------------- |
-| POST   | /transactions/deposit  | Deposit to account        |
-| POST   | /transactions/withdraw | Withdraw from account     |
-| POST   | /transactions/transfer | Transfer between accounts |
-| GET    | /transactions          | List user transactions    |
-| GET    | /transactions/:id      | View transaction details  |
+| Method | Endpoint              | Description               |
+| ------ | --------------------- | ------------------------- |
+| POST   | /transaction/deposit  | Deposit to account        |
+| POST   | /transaction/withdraw | Withdraw from account     |
+| POST   | /transaction/transfer | Transfer between accounts |
+| GET    | /transaction          | List user transactions    |
+| GET    | /transaction/:id      | View transaction details  |
+
+---
 
 ## 🚢 Deployment
 
-- **Database**: Supabase (PostgreSQL)
-- **Backend**: Railway
+- **Database**: Supabase (PostgreSQL) - Southeast Asia (Singapore)
+- **Backend**: Railway - us-west2
+
+---
