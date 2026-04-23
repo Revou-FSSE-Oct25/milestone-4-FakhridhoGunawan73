@@ -23,7 +23,7 @@ model User {
 model Account {
   id             Int           @id @default(autoincrement())
   accountNumber  String        @unique
-  balance        Float         @default(0)
+  balance        Decimal         @default(0) @db.Decimal(15, 2)
   type           AccountType   @default(SAVINGS)
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
@@ -36,7 +36,7 @@ model Account {
 model Transaction {
   id            Int             @id @default(autoincrement())
   type          TransactionType
-  amount        Float
+  amount        Decimal         @db.Decimal(15, 2)
   description   String?
   createdAt     DateTime        @default(now())
   fromAccountId Int?

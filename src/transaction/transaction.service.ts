@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { DepositDto } from './dto/deposit.dto';
 import { WithdrawDto } from './dto/withdraw.dto';
 import { TransferDto } from './dto/transfer.dto';
+import { Decimal } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class TransactionService {
@@ -20,7 +21,7 @@ export class TransactionService {
         }
         const updatedAccount = await this.prisma.account.update({
             where: { id: dto.accountId },
-            data: { balance: account.balance + dto.amount },
+            data: { balance: new Decimal (account.balance).plus(dto.amount) },
         });
         const transaction = await this.prisma.transaction.create({
             data: {
@@ -41,12 +42,12 @@ export class TransactionService {
         if (account.userId !== userId) {
             throw new BadRequestException('Account does not belong to user');
         }
-        if (account.balance < dto.amount) {
+        if (new Decimal (account.balance).lessThan(dto.amount)) {
             throw new BadRequestException('Insufficient balance');
         }
         const updatedAccount = await this.prisma.account.update({
             where: { id: dto.accountId },
-            data: { balance: account.balance - dto.amount },
+            data: { balance: new Decimal (account.balance).minus(dto.amount) },
         });
         const transaction = await this.prisma.transaction.create({
             data: {
@@ -67,7 +68,7 @@ export class TransactionService {
         if (fromAccount.userId !== userId ) {
             throw new BadRequestException('Account does not belong to user');
         }
-        if (fromAccount.balance < dto.amount) {
+        if (new Decimal(fromAccount.balance).lessThan(dto.amount)) {
             throw new BadRequestException('Insufficient balance');
         }
         const toAccount = await this.prisma.account.findUnique({
@@ -79,11 +80,11 @@ export class TransactionService {
         const [, , transaction] = await this.prisma.$transaction([
             this.prisma.account.update({
                 where : { id: dto.fromAccountId },
-                data: { balance: fromAccount.balance - dto.amount },
+                data: { balance: new Decimal (fromAccount.balance).minus (dto.amount) },
             }),
             this.prisma.account.update({
                 where: { id: dto.toAccountId },
-                data: { balance: toAccount.balance + dto.amount },
+                data: { balance: new Decimal (toAccount.balance).plus (dto.amount) },
             }),
             this.prisma.transaction.create({
                 data: {
